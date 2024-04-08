@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.bdqn.mapper.OrderMapper">
+    <insert id="addOrder">
+        INSERT INTO `orders`(`orderId`,`openid`,`buyerName`,
+                             `buyerPhone`,`buyerAddress`,`orderAmount`,
+                             `orderStatus`,`payStatus`,`orderdesc`,`createTime`)
+        VALUES(#{orders.orderId},#{orders.openId},#{orders.buyerName},#{orders.buyerPhone},#{orders.buyerAddress},
+               #{orders.orderAmount},#{orders.orderStatus},#{orders.payStatus},#{orders.orderDesc},#{orders.createTime})
+    </insert>
+    <select id="orderList" resultMap="ordersMap">
+        SELECT o.`orderId` oorderId,o.`buyerName`,o.`buyerPhone`,o.`buyerAddress`,
+               o.`openid`,o.`orderAmount`,o.`orderStatus`,o.`createTime`,o.`updateTime`,od.*
+        FROM `orders` o JOIN `orderdetail` od
+                             ON o.`orderId`=od.`orderid`
+                                 AND o.`openid`=#{openId}
+    </select>
+    <resultMap id="ordersMap" type="orders">
+        <result property="orderId" column="oorderId"/>
+        <result property="buyerName" column="buyerName"/>
+        <result property="buyerPhone" column="buyerPhone"/>
+        <result property="buyerAddress" column="buyerAddress"/>
+        <result property="openId" column="openId"/>
+        <result property="orderAmount" column="orderAmount"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="payStatus" column="payStatus"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <collection property="orderDetailList" ofType="orderDetail">
+            <result property="detailId" column="detailId"/>
+            <result property="productId" column="productId"/>
+            <result property="productCount" column="productCount"/>
+        </collection>
+    </resultMap>
+
+    <select id="orderdetail" resultMap="detailMap">
+        SELECT o.`orderId`,o.`buyerName`,o.`buyerPhone`,o.`buyerAddress`,
+               o.`openid`,o.`orderAmount`,o.`orderStatus`,o.`payStatus`,
+               o.`createTime`,o.`updateTime`,od.`detailid`,od.`productid`,
+               f.`foodname`,f.`foodprice`,od.`productcount`,f.`foodicon`,f.`foodimage`
+        FROM `orders` o JOIN `orderdetail` od
+                             ON o.`orderId`=od.`orderid`
+                        JOIN `food` f ON od.`productid`=f.`foodid`
+            AND o.`openid`=#{openId} AND o.`orderId`=#{orderId}
+    </select>
+    <resultMap id="detailMap" type="orders">
+        <result property="orderId" column="orderId"/>
+        <result property="buyerName" column="buyerName"/>
+        <result property="buyerPhone" column="buyerPhone"/>
+        <result property="buyerAddress" column="buyerAddress"/>
+        <result property="openId" column="openId"/>
+        <result property="orderAmount" column="orderAmount"/>
+        <result property="orderStatus" column="orderStatus"/>
+        <result property="payStatus" column="payStatus"/>
+        <result property="createTime" column="createTime"/>
+        <result property="updateTime" column="updateTime"/>
+        <collection property="orderProduct" ofType="product">
+            <result property="detailId" column="detailId"/>
+            <result property="orderId" column="orderId"/>
+            <result property="productId" column="productId"/>
+            <result property="productName" column="foodname"/>
+            <result property="productPrice" column="foodprice"/>
+            <result property="productQuantity" column="productcount"/>
+            <result property="productIcon" column="foodicon"/>
+            <result property="productImage" column="foodimage"/>
+        </collection>
+    </resultMap>
+</mapper>

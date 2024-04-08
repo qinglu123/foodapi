@@ -1,0 +1,16 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/dbfood?characterEncoding=utf-8&useSSL=false&serverTimezone=UTC
+    username: root
+    password: 123456
+    #德鲁伊配置
+    druid:
+      initial-size: 20
+      min-idle: 5
+      max-active: 50
+      max-wait: 60000
+
+mybatis:
+  mapper-locations: classpath:/mapper/*Mapper.xml
+  type-aliases-package: cn.bdqn.bean,cn.bdqn.dto
