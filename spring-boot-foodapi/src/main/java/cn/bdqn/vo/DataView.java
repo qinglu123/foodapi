@@ -43,14 +43,4 @@ public class DataView<T> {
     public void setData1(Map<T, T> data1) {
         this.data1 = data1;
     }
-
-    @Override
-    public String toString() {
-        return "DataView{" +
-                "code=" + code +
-                ", msg='" + msg + '\'' +
-                ", data=" + data +
-                ", data1=" + data1 +
-                '}';
-    }
 }
